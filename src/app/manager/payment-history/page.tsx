@@ -1,52 +1,38 @@
 
 
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-const farmers = [
-  {
-    name: 'Grace Uwimana',
-    product: 'Maize',
-    weight: 1200,
-    sold: 1000,
-    price: 250,
-    tax: 25000,
-    delivery: 500,
-  },
-  {
-    name: 'Samuel Niyonzima',
-    product: 'Tomatoes',
-    weight: 800,
-    sold: 700,
-    price: 180,
-    tax: 12600,
-    delivery: 700,
-  },
-  {
-    name: 'Chantal Mukamana',
-    product: 'Cassava',
-    weight: 500,
-    sold: 500,
-    price: 120,
-    tax: 6000,
-    delivery: 400,
-  },
-  {
-    name: 'Eric Mugisha',
-    product: 'Yam',
-    weight: 400,
-    sold: 400,
-    price: 200,
-    tax: 8000,
-    delivery: 900,
-  },
-];
+interface FarmerPayment {
+  name: string;
+  product: string;
+  weight: number;
+  sold: number;
+  price: number;
+  tax: number;
+  delivery: number;
+}
 
 const formatCurrency = (num: number) =>
   `$${num.toLocaleString('en-US', { minimumFractionDigits: 0 })}`;
 
 export default function PaymentHistory() {
+  const [farmers, setFarmers] = useState<FarmerPayment[]>([]);
+
+  useEffect(() => {
+    fetch('/api/payment-history')
+      .then(res => res.json())
+      .then(setFarmers)
+      .catch(console.error);
+  }, []);
+
+  // Compute totals dynamically
+  const totalTransferred = farmers.reduce((sum, f) => sum + f.sold * f.price, 0);
+  const totalTax = farmers.reduce((sum, f) => sum + f.tax, 0);
+  const totalDelivery = farmers.reduce((sum, f) => sum + f.delivery, 0);
+  const totalToFarmers = totalTransferred - totalTax - totalDelivery;
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-100 to-white p-6">
       <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
@@ -56,17 +42,17 @@ export default function PaymentHistory() {
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <SummaryCard title="Total Amount Transferred" amount={12500} />
-          <SummaryCard title="Total from Wholesalers" amount={10000} />
-          <SummaryCard title="Total Sent to Farmers (After Tax)" amount={9000} />
+          <SummaryCard title="Total Amount Transferred" amount={totalTransferred} />
+          <SummaryCard title="Total from Wholesalers" amount={0} /> {/* Can add dynamic later */}
+          <SummaryCard title="Total Sent to Farmers (After Tax)" amount={totalToFarmers} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <SummaryCard title="Total Tax Paid" amount={1000} />
-          <SummaryCard title="Total Delivery Paid" amount={2500} />
+          <SummaryCard title="Total Tax Paid" amount={totalTax} />
+          <SummaryCard title="Total Delivery Paid" amount={totalDelivery} />
         </div>
 
-        {/* Table */}
+        {/* Payment Table */}
         <div className="overflow-x-auto rounded-lg shadow">
           <table className="w-full table-auto border border-gray-300 bg-white">
             <thead className="bg-blue-200 text-gray-700">
@@ -86,12 +72,8 @@ export default function PaymentHistory() {
               {farmers.map((f, i) => {
                 const amount = f.sold * f.price;
                 const net = amount - f.tax - f.delivery;
-
                 return (
-                  <tr
-                    key={i}
-                    className="even:bg-gray-100 text-center text-sm md:text-base"
-                  >
+                  <tr key={i} className="even:bg-gray-100 text-center text-sm md:text-base">
                     <td className="px-4 py-2 text-left font-medium">{f.name}</td>
                     <td className="px-4 py-2">{f.product}</td>
                     <td className="px-4 py-2">{f.weight}</td>
@@ -100,9 +82,7 @@ export default function PaymentHistory() {
                     <td className="px-4 py-2">{formatCurrency(amount)}</td>
                     <td className="px-4 py-2">{formatCurrency(f.tax)}</td>
                     <td className="px-4 py-2">{formatCurrency(f.delivery)}</td>
-                    <td className="px-4 py-2 font-semibold text-green-700">
-                      {formatCurrency(net)}
-                    </td>
+                    <td className="px-4 py-2 font-semibold text-green-700">{formatCurrency(net)}</td>
                   </tr>
                 );
               })}
@@ -112,12 +92,11 @@ export default function PaymentHistory() {
 
         {/* Back Button */}
         <div className="mt-6">
-     <Link href="/manager/dashboard">
-  <button className="inline-block px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
-    ← Back to Dashboard
-  </button>
-</Link>
-
+          <Link href="/manager/dashboard">
+            <button className="inline-block px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+              ← Back to Dashboard
+            </button>
+          </Link>
         </div>
       </div>
     </main>
