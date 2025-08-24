@@ -38,7 +38,7 @@ export default function UpdateUser() {
     formData.append("bank", form.bank);
 
     try {
-      const res = await fetch("/api/users/update", {
+      const res = await fetch("/api/users", {
         method: "POST",
         body: formData,
       });

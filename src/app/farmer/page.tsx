@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { Bell, Settings } from 'lucide-react';
 import Link from 'next/link';
 
-// Set the page title manually
+// FarmerDashboard Page
 export default function FarmerDashboard() {
   useEffect(() => {
     document.title = "Farmer Dashboard - Upload Products";
   }, []);
 
-  // Slides for hero slider
+  // Hero Slider
   const slides = [
     { image: '/image/cooperative.png', caption: "Partnership with Cooperatives: Better Products, Fair Prices" },
     { image: '/image/tomatoes.png', caption: "Get the best price for your tomatoes by reaching a wide audience" },
@@ -29,16 +29,6 @@ export default function FarmerDashboard() {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
-
-  // Product grid
-  const productCards = [
-    { image: '/image/tomatoes.png', title: 'tomatoes', description: 'Our platform makes it easy to list, sell, and ship your tomatoes', time:'harvested:25 may', price: '1000/kg' },
-    { image: '/image/maize.png',title:'maize', description: 'High-quality maize, perfect for food and feed.',time:'harvested:25 may', price: '800 RWF' },
-    { image: '/image/pome.png',title:'apples', description: 'Partner with us to grow your business and find the perfect market for every apple harvest',time:'harvested:25 may', price: '2000 RWF' },
-    { image: '/image/mangoes.png', title: 'Mangoes', description: 'Connect directly with buyers and build your brand as a trusted supplier of premium mangoes', time: 'harvested :25 may', price: '1000 RWF' },
-    { image: '/image/carrots.png', title: 'carrots', description: 'Fresh and crunchy carrots for your table', time: 'harvested :25 may', price: '700/kg' },
-    { image: '/image/onions.png', title: 'onions',description:'Get the best possible price for your onions and eliminate waste', time: 'harvested :25 may', price: '1500/kg' },
-  ];
 
   // Header Component
   const Header = () => (
@@ -95,67 +85,92 @@ export default function FarmerDashboard() {
       </div>
     </div>
   );
-// This component is the first info card.
-function InfoCardComponent() {
-  return (
-    <section className="relative w-full py-16 px-4 bg-gray-100 font-inter">
-      <div className="bg-white rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 max-w-6xl mx-auto shadow-2xl">
-        <div className="w-full md:w-1/2">
-          <div className="overflow-hidden rounded-2xl shadow-lg">
-            <img
-              src="/image/farmer.png"
-              alt="Smiling African Farmer"
-              className="w-full h-auto object-cover transition-transform duration-500 hover:scale-105"
-            />
+
+  // InfoCard Component
+  function InfoCardComponent() {
+    return (
+      <section className="relative w-full py-16 px-4 bg-gray-100 font-inter">
+        <div className="bg-white rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 max-w-6xl mx-auto shadow-2xl">
+          <div className="w-full md:w-1/2">
+            <div className="overflow-hidden rounded-2xl shadow-lg">
+              <img
+                src="/image/farmer.png"
+                alt="Smiling African Farmer"
+                className="w-full h-auto object-cover transition-transform duration-500 hover:scale-105"
+              />
+            </div>
+          </div>
+          <div className="w-full md:w-1/2 text-center md:text-left">
+            <h2 className="text-3xl font-bold text-green-700 mb-4">Empowering Farmers</h2>
+            <p className="text-gray-700 text-lg mb-4">
+              <strong>Agribridge</strong> helps farmers get fair prices by connecting them directly to buyers,
+              cutting out middlemen and reducing overpricing.
+            </p>
+            <p className="text-gray-700 text-lg mb-4">
+              Our platform ensures fast, reliable deliveries so your products reach the market fresh and on time.
+            </p>
+            <p className="text-gray-700 text-lg mb-6">
+              We empower cooperatives to track, manage, and celebrate their impact, making agriculture more rewarding
+              for everyone.
+            </p>
+            <Link href="/farmer/upload">
+              <button className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4 rounded-full shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                Upload Product
+              </button>
+            </Link>
           </div>
         </div>
-        <div className="w-full md:w-1/2 text-center md:text-left">
-          <h2 className="text-3xl font-bold text-green-700 mb-4">Empowering Farmers</h2>
-          <p className="text-gray-700 text-lg mb-4">
-            <strong>Agribridge</strong> helps farmers get fair prices by connecting them directly to buyers,
-            cutting out middlemen and reducing overpricing.
-          </p>
-          <p className="text-gray-700 text-lg mb-4">
-            Our platform ensures fast, reliable deliveries so your products reach the market fresh and on time.
-          </p>
-          <p className="text-gray-700 text-lg mb-6">
-            We empower cooperatives to track, manage, and celebrate their impact, making agriculture more rewarding
-            for everyone.
-          </p>
-          <Link href="/farmer/upload">
-            <button className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4 rounded-full shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-              Upload Product
-            </button>
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-  // Product Grid Component
-  const ProductGrid = () => (
-    <section className="relative w-full py-16 px-4 bg-gray-100 font-inter">
-      <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-4xl font-bold text-gray-800 mb-12">Your Uploaded Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {productCards.map((card, index) => (
-            <div key={index} className="bg-white rounded-3xl overflow-hidden shadow-2xl transition-transform duration-300 hover:scale-105">
-              <img src={card.image} alt={card.title} className="w-full h-48 object-cover" />
-              <div className="p-6 text-center">
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">{card.title}</h3>
-                <p className="text-gray-600 font-medium">{card.description}</p>
-                <p className="text-gray-600 font-medium">{card.time}</p>
-                <p className="text-gray-600 font-medium">{card.price}</p>
-                <p className="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-full shadow-lg">
-                  Available
-                </p>
+      </section>
+    );
+  }
+
+  // ProductGrid Component (Dynamic API)
+  const ProductGrid = () => {
+    const [products, setProducts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchProducts = async () => {
+        try {
+          const res = await fetch('/api/farmer/productGrid');
+          const data = await res.json();
+          if (data.success) setProducts(data.products);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProducts();
+    }, []);
+
+    if (loading) return <p className="text-center py-8">Loading products...</p>;
+    if (!products.length) return <p className="text-center py-8">No products uploaded yet.</p>;
+
+    return (
+      <section className="relative w-full py-16 px-4 bg-gray-100 font-inter">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-4xl font-bold text-gray-800 mb-12">Your Uploaded Products</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {products.map((card) => (
+              <div key={card.id} className="bg-white rounded-3xl overflow-hidden shadow-2xl transition-transform duration-300 hover:scale-105">
+                <img src={card.image} alt={card.title} className="w-full h-48 object-cover" />
+                <div className="p-6 text-center">
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">{card.title}</h3>
+                  <p className="text-gray-600 font-medium">{card.description}</p>
+                  <p className="text-gray-600 font-medium">{card.time}</p>
+                  <p className="text-gray-600 font-medium">{card.price}</p>
+                  <p className="mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-full shadow-lg">
+                    Available
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
-  );
+      </section>
+    );
+  };
 
   // Footer Component
   const Footer = () => (
@@ -175,20 +190,20 @@ function InfoCardComponent() {
     </footer>
   );
 
- return (
-  <>
-    <Header />
-    <div className="font-inter bg-gray-200">
-      <div className="py-12 px-4 text-center">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
-          See where your product goes
-        </h1>
+  return (
+    <>
+      <Header />
+      <div className="font-inter bg-gray-200">
+        <div className="py-12 px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
+            See where your product goes
+          </h1>
+        </div>
+        <HeroSlider />
+        <InfoCardComponent />
+        <ProductGrid />
+        <Footer />
       </div>
-      <HeroSlider />
-      <InfoCardComponent />
-      <ProductGrid />
-      <Footer />
-    </div>
-  </>
-);
+    </>
+  );
 }
