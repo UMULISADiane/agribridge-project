@@ -58,15 +58,14 @@ export default function AnalyticsPage() {
   const [orderStatusData, setOrderStatusData] = useState<OrderStatusItem[]>([]);
   const [radarData, setRadarData] = useState<RadarItem[]>([]);
 
-useEffect(() => {
-  fetch('/api/analytics/paidToItem').then(res => res.json()).then(setPaidToData).catch(console.error);
-  fetch('/api/analytics/userTypes').then(res => res.json()).then(setUserTypeData).catch(console.error);
-  fetch('/api/analytics/formsOfPayment').then(res => res.json()).then(setFormsOfPaymentData).catch(console.error);
-  fetch('/api/analytics/overTime').then(res => res.json()).then(setOverTimeData).catch(console.error);
-  fetch('/api/analytics/orderStatus').then(res => res.json()).then(setOrderStatusData).catch(console.error);
-  fetch('/api/analytics/radar').then(res => res.json()).then(setRadarData).catch(console.error);
-}, []);
-
+  useEffect(() => {
+    fetch('/api/analytics/paidToItem').then(res => res.json()).then(setPaidToData).catch(console.error);
+    fetch('/api/analytics/userTypes').then(res => res.json()).then(setUserTypeData).catch(console.error);
+    fetch('/api/analytics/formsOfPayment').then(res => res.json()).then(setFormsOfPaymentData).catch(console.error);
+    fetch('/api/analytics/overTime').then(res => res.json()).then(setOverTimeData).catch(console.error);
+    fetch('/api/analytics/orderStatus').then(res => res.json()).then(setOrderStatusData).catch(console.error);
+    fetch('/api/analytics/radar').then(res => res.json()).then(setRadarData).catch(console.error);
+  }, []);
 
   // === ANIMATION FOR PAYMENT FORMS ===
   useEffect(() => {
@@ -95,7 +94,7 @@ useEffect(() => {
   return (
     <div className="min-h-screen bg-gray-100 font-sans flex flex-col">
       <header className="bg-indigo-900 text-white py-6 text-center shadow-lg">
-        <h1 className="text-3xl font-bold">AgriConnect Analytics</h1>
+        <h1 className="text-3xl font-bold">Agribridge Analytics</h1>
       </header>
 
       {/* TABS */}
@@ -149,6 +148,25 @@ useEffect(() => {
                   </PieChart>
                 </ResponsiveContainer>
               </div>
+              <div className="overflow-x-auto rounded-lg shadow mb-6 mt-4">
+                <table className="w-full table-auto border border-gray-300 bg-white">
+                  <thead className="bg-blue-200 text-gray-700">
+                    <tr>
+                      <th className="px-4 py-2 text-left">Recipient</th>
+                      <th className="px-4 py-2">Percentage (%)</th>
+                    </tr>
+                  </thead>
+                           <tbody>
+          {paidToData.map((item, index) => (
+            <tr key={index} className="border-t hover:bg-gray-50">
+              <td className="px-4 py-2">{item.recipient}</td>
+              <td className="px-4 py-2 text-center">{item.percentage}</td>
+          
+            </tr>
+          ))}
+        </tbody>
+                </table>
+              </div>
             </div>
           )}
 
@@ -166,44 +184,134 @@ useEffect(() => {
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
+
+              <div className="overflow-x-auto rounded-lg shadow mb-6 mt-4">
+                <table className="w-full table-auto border border-gray-300 bg-white">
+                  <thead className="bg-blue-200 text-gray-700">
+            <tr>
+        <th className="px-4 py-2 text-left">User Type</th>
+        <th className="px-4 py-2">Count</th>
+      </tr>
+    </thead>
+   <tbody>
+  {userTypeData.map((item, index) => (
+    <tr key={index} className="border-t hover:bg-gray-50">
+      <td className="px-4 py-2">{item.type}</td>
+      <td className="px-4 py-2 text-center">{item.count}</td>
+    </tr>
+  ))}
+</tbody>
+
+                </table>
+              </div>
             </div>
           )}
 
           {activeTab === 'Payment Forms' && (
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-4 text-center">Forms of Payment Used by Who</h2>
-              <ResponsiveContainer width="100%" height={350}>
-                <BarChart data={visibleFormsOfPaymentData}>
-                  <XAxis dataKey="role" />
-                  <YAxis />
-                  <Tooltip content={<CustomBarTooltip />} />
-                  <Legend />
-                  <Bar dataKey="card" stackId="a" fill="#4CAF50" name="Card" />
-                  <Bar dataKey="googlePay" stackId="a" fill="#2196F3" name="Google Pay" />
-                  <Bar dataKey="moMo" stackId="a" fill="#FFC107" name="MoMo" />
-                  <Bar dataKey="cash" stackId="a" fill="#212B36" name="Cash" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          )}
+  <div>
+    
 
-          {activeTab === 'Over Time' && (
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-4 text-center">Orders & Payments Over Time</h2>
-              <ResponsiveContainer width="100%" height={350}>
-                <LineChart data={overTimeData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="day" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="ordersCompleted" stroke="#4CAF50" name="Orders Completed" strokeWidth={2} />
-                  <Line type="monotone" dataKey="paymentsReleased" stroke="#2196F3" name="Payments Released" strokeWidth={2} />
-                  <Line type="monotone" dataKey="farmerPayouts" stroke="#FFC107" name="Farmer Payouts" strokeWidth={2} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          )}
+    {/* === Chart === */}
+    <ResponsiveContainer width="100%" height={350}>
+      <BarChart data={visibleFormsOfPaymentData}>
+        <XAxis dataKey="role" />
+        <YAxis />
+        <Tooltip content={<CustomBarTooltip />} />
+        <Legend />
+        <Bar dataKey="card" stackId="a" fill="#4CAF50" name="Card" />
+        <Bar dataKey="googlePay" stackId="a" fill="#2196F3" name="Google Pay" />
+        <Bar dataKey="moMo" stackId="a" fill="#FFC107" name="MoMo" />
+        <Bar dataKey="cash" stackId="a" fill="#212B36" name="Cash" />
+      </BarChart>
+    </ResponsiveContainer>
+
+    {/* === Table === */}
+    <div className="overflow-x-auto rounded-lg shadow mb-6 mt-4">
+      <table className="w-full table-auto border border-gray-300 bg-white">
+        <thead className="bg-blue-200 text-gray-700">
+          <tr>
+            <th className="px-4 py-2 text-left">Role</th>
+            <th className="px-4 py-2 text-center">Card</th>
+            <th className="px-4 py-2 text-center">Google Pay</th>
+            <th className="px-4 py-2 text-center">MoMo</th>
+            <th className="px-4 py-2 text-center">Cash</th>
+          </tr>
+        </thead>
+        <tbody>
+          {visibleFormsOfPaymentData.map((item, index) => (
+            <tr key={index} className="border-t hover:bg-gray-50">
+              <td className="px-4 py-2">{item.role}</td>
+              <td className="px-4 py-2 text-center">{item.card}</td>
+              <td className="px-4 py-2 text-center">{item.googlePay}</td>
+              <td className="px-4 py-2 text-center">{item.moMo}</td>
+              <td className="px-4 py-2 text-center">{item.cash}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
+
+        {activeTab === 'Over Time' && (
+  <div>
+   
+    <ResponsiveContainer width="100%" height={350}>
+      <LineChart data={overTimeData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="day" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line
+          type="monotone"
+          dataKey="ordersCompleted"
+          stroke="#4CAF50"
+          name="Orders Completed"
+          strokeWidth={2}
+        />
+        <Line
+          type="monotone"
+          dataKey="paymentsReleased"
+          stroke="#2196F3"
+          name="Payments Released"
+          strokeWidth={2}
+        />
+        <Line
+          type="monotone"
+          dataKey="farmerPayouts"
+          stroke="#FFC107"
+          name="Farmer Payouts"
+          strokeWidth={2}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+
+    <div className="overflow-x-auto rounded-lg shadow mb-6 mt-4">
+      <table className="w-full table-auto border border-gray-300 bg-white">
+        <thead className="bg-blue-200 text-gray-700">
+          <tr>
+            <th className="px-4 py-2 text-left">Day</th>
+            <th className="px-4 py-2">Orders Completed</th>
+            <th className="px-4 py-2">Payments Released</th>
+            <th className="px-4 py-2">Farmer Payouts</th>
+          </tr>
+        </thead>
+        <tbody>
+          {overTimeData.map((item, index) => (
+            <tr key={index} className="border-t hover:bg-gray-50">
+              <td className="px-4 py-2">{item.day}</td>
+              <td className="px-4 py-2 text-center">{item.ordersCompleted}</td>
+              <td className="px-4 py-2 text-center">{item.paymentsReleased}</td>
+              <td className="px-4 py-2 text-center">{item.farmerPayouts}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
+
 
           {activeTab === 'Order Status' && (
             <div>
@@ -219,25 +327,80 @@ useEffect(() => {
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
+                   <div className="overflow-x-auto rounded-lg shadow mb-6 mt-4">
+                <table className="w-full table-auto border border-gray-300 bg-white">
+                  <thead className="bg-blue-200 text-gray-700">
+                    <tr>
+                      <th className="px-4 py-2 text-left">Status</th>
+                      <th className="px-4 py-2">Orders</th>
+                      
+                    </tr>
+                  </thead>
+                    <tbody>
+          {orderStatusData.map((item, index) => (
+            <tr key={index} className="border-t hover:bg-gray-50">
+              <td className="px-4 py-2">{item.status}</td>
+              <td className="px-4 py-2 text-center">{item.orders}</td>
+          
+            </tr>
+          ))}
+        </tbody>
+                </table>
+              </div>
             </div>
+            
           )}
 
           {activeTab === 'Radar' && (
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-4 text-center">Multi-category Comparison (Radar)</h2>
-              <ResponsiveContainer width="100%" height={350}>
-                <RadarChart data={radarData} >
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="category" />
-                  <PolarRadiusAxis domain={[0, 100]} />
-                  <Radar name="Farmer A" dataKey="farmerA" stroke="#cbe2f5ff" fill="#ccdfeeff" fillOpacity={0.3} />
-                  <Radar name="Farmer B" dataKey="farmerB" stroke="#a8e6aaff" fill="#99d39bff" fillOpacity={0.3} />
-                  <Tooltip />
-                  <Legend />
-                </RadarChart>
-              </ResponsiveContainer>
-            </div>
-          )}
+  <div>
+    <ResponsiveContainer width="100%" height={400}>
+      <RadarChart data={radarData}>
+        <PolarGrid />
+        <PolarAngleAxis dataKey="category" />
+     <PolarRadiusAxis angle={90} domain={[10, 100]} />
+        <Radar
+          name="Farmer A"
+          dataKey="farmerA"
+          stroke="#cbe2f5ff"
+          fill="#ccdfeeff"
+          fillOpacity={0.3}
+        />
+        <Radar
+          name="Farmer B"
+          dataKey="farmerB"
+          stroke="#a8e6aaff"
+          fill="#99d39bff"
+          fillOpacity={0.3}
+        />
+        <Tooltip />
+        <Legend />
+      </RadarChart>
+    </ResponsiveContainer>
+
+    {/* Table */}
+    <div className="overflow-x-auto rounded-lg shadow mb-6 mt-4">
+      <table className="w-full table-auto border border-gray-300 bg-white">
+        <thead className="bg-blue-200 text-gray-700">
+          <tr>
+            <th className="px-4 py-2 text-left">KPI</th>
+            <th className="px-4 py-2">Farmer A</th>
+            <th className="px-4 py-2">Farmer B</th>
+          </tr>
+        </thead>
+        <tbody>
+          {radarData.map((item, index) => (
+            <tr key={index} className="border-t hover:bg-gray-50">
+              <td className="px-4 py-2">{item.category}</td>
+              <td className="px-4 py-2 text-center">{item.farmerA}</td>
+              <td className="px-4 py-2 text-center">{item.farmerB}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+)}
+
 
           {/* NAVIGATION DOTS */}
           <div className="mt-8 flex justify-center items-center space-x-2">

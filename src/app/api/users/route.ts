@@ -3,15 +3,16 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const data = await req.formData();
+const user = {
+  username: data.get("username"),
+  password: data.get("password"),
+  confirmpassword: data.get("confirmpassword"), // ✅ match the actual field name
+  role: data.get("role"),
+  phone: data.get("phone"),
+  idPhoto: data.get("idPhoto"), // will need special handling if it’s a File
+  bank: data.get("bank"),
+};
 
-    const user = {
-      username: data.get("username"),
-      password: data.get("password"),
-      role: data.get("role"),
-      phone: data.get("phone"),
-      idPhoto: data.get("idPhoto"), // file (handle later, e.g., upload to cloud)
-      bank: data.get("bank"),
-    };
 
     console.log("New user created:", user);
 

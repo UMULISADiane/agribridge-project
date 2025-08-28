@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-const assignments = [
-  { driver: "John Doe", orderID: "#12345", route: "Seattle → Portland", eta: "Today, 2:30 PM" },
+const assignments: any[]  = [
+ 
 ];
 
 export async function GET() {

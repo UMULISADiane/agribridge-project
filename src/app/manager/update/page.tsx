@@ -7,6 +7,7 @@ export default function UpdateUser() {
   const [form, setForm] = useState({
     username: "",
     password: "",
+      confirmpassword: "",
     role: "",
     phone: "",
     idPhoto: null as File | null,
@@ -30,6 +31,7 @@ export default function UpdateUser() {
     const formData = new FormData();
     formData.append("username", form.username);
     formData.append("password", form.password);
+    formData.append("confirmpassword", form.confirmpassword);
     formData.append("role", form.role);
     formData.append("phone", form.phone);
     if (form.idPhoto) {
@@ -53,7 +55,13 @@ export default function UpdateUser() {
   };
 
   return (
-    <div className="bg-gradient-to-b from-blue-100 to-white p-6">
+   <div className="min-h-screen bg-gray-100 font-sans flex flex-col">
+      <header className="bg-indigo-900 text-white py-6 shadow-lg w-full">
+  <h1 className="text-3xl font-bold text-center">
+    Agribridge User Management
+  </h1>
+</header>
+<div className="p-8 max-w-6xl mx-auto">
       {/* Back Button */}
       <div className="mb-6">
         <Link href="/manager/users">
@@ -66,7 +74,7 @@ export default function UpdateUser() {
       {/* Form Container */}
       <div className="max-w-2xl mx-auto bg-white shadow-lg rounded-2xl p-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          Update User
+          Add / Update User
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -95,6 +103,18 @@ export default function UpdateUser() {
               required
             />
           </div>
+         {/* Confirm password */}
+<div>
+  <label className="block font-medium">Confirm Password</label>
+  <input
+    type="password"
+    name="confirmpassword"   // ✅ different name
+    value={form.confirmpassword} // ✅ separate state property
+    onChange={handleChange}
+    className="w-full border rounded-lg px-3 py-2"
+    required
+  />
+</div>
 
           {/* Role */}
           <div>
@@ -116,7 +136,7 @@ export default function UpdateUser() {
 
           {/* Phone */}
           <div>
-            <label className="block font-medium">Phone</label>
+            <label className="block font-medium">Telephone</label>
             <input
               type="text"
               name="phone"
@@ -141,7 +161,7 @@ export default function UpdateUser() {
 
           {/* Bank */}
           <div>
-            <label className="block font-medium">Bank</label>
+            <label className="block font-medium">Bank Account Number</label>
             <input
               type="text"
               name="bank"
@@ -156,10 +176,19 @@ export default function UpdateUser() {
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
           >
-            Update User
+            Submit
           </button>
         </form>
       </div>
+      </div>
+       <footer className="w-full bg-indigo-900 text-white py-12 px-4 font-inter rounded-t-3xl mt-12">
+      <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
+        <p className="text-gray-400 text-sm mb-2">© 2026 Fleet Management System. All rights reserved.</p>
+        <p className="font-bold text-green-700">
+          Our mission is to optimize fleet operations and improve driver efficiency.
+        </p>
+      </div>
+    </footer>
     </div>
   );
 }

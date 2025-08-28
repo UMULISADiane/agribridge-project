@@ -30,9 +30,16 @@ export default function UsersPage() {
       .then(setUsers)
       .catch(console.error);
   }, []);
+ 
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-100 to-white p-6">
+   
+      <div className="min-h-screen bg-gray-100 font-sans flex flex-col">
+           <header className="bg-indigo-900 text-white py-6 shadow-lg w-full">
+  <h1 className="text-3xl font-bold text-center">
+    Agribridge User Management
+  </h1>
+</header>
       <div className="p-8 max-w-6xl mx-auto">
         {/* Back Button */}
         <div className="mb-6">
@@ -43,16 +50,16 @@ export default function UsersPage() {
           </Link>
         </div>
 
-        {/* Page Title */}
-        <h1 className="text-3xl font-bold text-center text-green-800 mb-8">
-          Agribridge Users Management
-        </h1>
+        
 
         {/* Main Card */}
         <div className="bg-white rounded-xl shadow-lg p-10 space-y-8">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">
             Welcome, Manager! Here you can view, add, update, or remove users from the system.
           </h2>
+           <h1 className="text-3xl font-bold text-center text-green-800 mb-8">
+          User Management
+        </h1>
 
           {/* Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -115,6 +122,15 @@ export default function UsersPage() {
           </div>
         </div>
       </div>
-    </main>
+       <footer className="w-full bg-indigo-900 text-white py-12 px-4 font-inter rounded-t-3xl mt-12">
+      <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
+        <p className="text-gray-400 text-sm mb-2">© 2026 Fleet Management System. All rights reserved.</p>
+        <p className="font-bold text-green-700">
+          Our mission is to optimize fleet operations and improve driver efficiency.
+        </p>
+      </div>
+    </footer>
+      </div>
+    
   );
 }

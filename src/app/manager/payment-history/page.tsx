@@ -1,113 +1,169 @@
-
-
 'use client';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-interface FarmerPayment {
+type FarmerPayment = {
+  id: number;
   name: string;
-  product: string;
-  weight: number;
-  sold: number;
-  price: number;
-  tax: number;
-  delivery: number;
-}
+  product?: string;
+  weight?: number;
+  sold?: number;
+  price?: number;
+  tax?: number;
+  delivery?: number;
+  amount?: number; // for summary list
+};
 
-const formatCurrency = (num: number) =>
-  `$${num.toLocaleString('en-US', { minimumFractionDigits: 0 })}`;
+type SummaryItem = {
+  title: string;
+  amount?: number;
+};
+const defaultSummary: SummaryItem[] = [
+  { title: "Total Amount Transferred" },
+  { title: "Total from Wholesalers" },
+  { title: "Total Sent to Farmers (After Tax)" },
+  { title: "Total Tax Paid" },
+  { title: "Total Delivery Paid" },
+];
+
+
+
+const formatCurrency = (num?: number) =>
+  num !== undefined ? `$${num.toLocaleString('en-US', { minimumFractionDigits: 0 })}` : '-';
 
 export default function PaymentHistory() {
-  const [farmers, setFarmers] = useState<FarmerPayment[]>([]);
+  const [payments, setPayments] = useState<FarmerPayment[]>([]);
+  const [summary, setSummary] = useState<SummaryItem[]>(defaultSummary);
+useEffect(() => {
+  fetch('/api/payment-history')
+    .then(res => res.json())
+    .then((data) => {
+      const payments: FarmerPayment[] = data.payments || [];
 
-  useEffect(() => {
-    fetch('/api/payment-history')
-      .then(res => res.json())
-      .then(setFarmers)
-      .catch(console.error);
-  }, []);
+      // Calculate totals
+    const totalTransferred =
+  payments.reduce(
+    (sum, f: FarmerPayment) => sum + ((f.sold || 0) * (f.price || 0)),
+    0
+  );
 
-  // Compute totals dynamically
-  const totalTransferred = farmers.reduce((sum, f) => sum + f.sold * f.price, 0);
-  const totalTax = farmers.reduce((sum, f) => sum + f.tax, 0);
-  const totalDelivery = farmers.reduce((sum, f) => sum + f.delivery, 0);
-  const totalToFarmers = totalTransferred - totalTax - totalDelivery;
+const totalTax =
+  payments.reduce((sum, f: FarmerPayment) => sum + (f.tax || 0), 0);
+
+const totalDelivery =
+  payments.reduce((sum, f: FarmerPayment) => sum + (f.delivery || 0), 0);
+
+const totalToFarmers = totalTransferred - totalTax - totalDelivery;
+
+
+      setPayments(payments);
+      setSummary([
+        { title: "Total Amount Transferred", amount: totalTransferred },
+        { title: "Total from Wholesalers", amount: data.summary?.[1]?.amount || 0 },
+        { title: "Total Sent to Farmers (After Tax)", amount: totalToFarmers },
+        { title: "Total Tax Paid", amount: totalTax },
+        { title: "Total Delivery Paid", amount: totalDelivery },
+      ]);
+    })
+    .catch(console.error);
+}, []);
+
 
   return (
+       <div className="min-h-screen bg-gray-100 font-sans flex flex-col">
+  <header className="bg-indigo-900 text-white py-6 shadow-lg w-full">
+        <h1 className="text-3xl font-bold text-center">Agribridge Payment History</h1>
+      </header>
     <main className="min-h-screen bg-gradient-to-b from-blue-100 to-white p-6">
-      <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
-        Agribridge Payment History
-      </h1>
+       <div className="mt-6">
+        <Link href="/manager/dashboard">
+          <button className="inline-block px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+            ← Back to Dashboard
+          </button>
+        </Link>
+      </div>
 
-      <div className="max-w-6xl mx-auto space-y-8">
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <SummaryCard title="Total Amount Transferred" amount={totalTransferred} />
-          <SummaryCard title="Total from Wholesalers" amount={0} /> {/* Can add dynamic later */}
-          <SummaryCard title="Total Sent to Farmers (After Tax)" amount={totalToFarmers} />
-        </div>
+      {/* Summary Cards */}
+       <div className="bg-white rounded-xl shadow-lg p-10 space-y-8">
+      <div className="p-8 max-w-6xl mx-auto">
+      <div className=" bg-gray grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        {summary.map((item, idx) => (
+          <div key={idx} className="bg-blue-200 p-4 shadow rounded-lg text-center">
+            <h2 className="text-lg font-semibold">{item.title}</h2>
+            <p className="text-green-600 font-bold text-xl">{formatCurrency(item.amount)}</p>
+          </div>
+        ))}
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <SummaryCard title="Total Tax Paid" amount={totalTax} />
-          <SummaryCard title="Total Delivery Paid" amount={totalDelivery} />
-        </div>
+     
 
-        {/* Payment Table */}
-        <div className="overflow-x-auto rounded-lg shadow">
-          <table className="w-full table-auto border border-gray-300 bg-white">
-            <thead className="bg-blue-200 text-gray-700">
+      {/* Payments Table */}
+      <div className="overflow-x-auto rounded-lg shadow mb-6">
+        <table className="w-full table-auto border border-gray-300 bg-white">
+          <thead className="bg-blue-200 text-gray-700">
+            <tr>
+              <th className="px-4 py-2 text-left">Farmer</th>
+              <th className="px-4 py-2">Product</th>
+              <th className="px-4 py-2">Weight (kg)</th>
+              <th className="px-4 py-2">Amount Sold</th>
+              <th className="px-4 py-2">Price ($)</th>
+              <th className="px-4 py-2">Amount ($)</th>
+              <th className="px-4 py-2">Tax Paid ($)</th>
+              <th className="px-4 py-2">Delivery Paid ($)</th>
+              <th className="px-4 py-2">Net Received ($)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {payments.length === 0 ? (
               <tr>
-                <th className="px-4 py-2 text-left">Farmer</th>
-                <th className="px-4 py-2">Product</th>
-                <th className="px-4 py-2">Weight (kg)</th>
-                <th className="px-4 py-2">Amount Sold</th>
-                <th className="px-4 py-2">Price ($)</th>
-                <th className="px-4 py-2">Amount ($)</th>
-                <th className="px-4 py-2">Tax Paid ($)</th>
-                <th className="px-4 py-2">Delivery Paid ($)</th>
-                <th className="px-4 py-2">Net Received ($)</th>
+                <td colSpan={9} className="text-center py-4 text-gray-500">
+                  No payments available
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {farmers.map((f, i) => {
-                const amount = f.sold * f.price;
-                const net = amount - f.tax - f.delivery;
+            ) : (
+              payments.map((f, i) => {
+                const amount = (f.sold || 0) * (f.price || 0);
+                const net = amount - (f.tax || 0) - (f.delivery || 0);
                 return (
                   <tr key={i} className="even:bg-gray-100 text-center text-sm md:text-base">
-                    <td className="px-4 py-2 text-left font-medium">{f.name}</td>
-                    <td className="px-4 py-2">{f.product}</td>
-                    <td className="px-4 py-2">{f.weight}</td>
-                    <td className="px-4 py-2">{f.sold}</td>
-                    <td className="px-4 py-2">{f.price}</td>
+                    <td className="px-4 py-2 text-left font-medium">{f.name || '-'}</td>
+                    <td className="px-4 py-2">{f.product || '-'}</td>
+                    <td className="px-4 py-2">{f.weight || '-'}</td>
+                    <td className="px-4 py-2">{f.sold || 0}</td>
+                    <td className="px-4 py-2">{f.price || 0}</td>
                     <td className="px-4 py-2">{formatCurrency(amount)}</td>
-                    <td className="px-4 py-2">{formatCurrency(f.tax)}</td>
-                    <td className="px-4 py-2">{formatCurrency(f.delivery)}</td>
+                    <td className="px-4 py-2">{formatCurrency(f.tax || 0)}</td>
+                    <td className="px-4 py-2">{formatCurrency(f.delivery || 0)}</td>
                     <td className="px-4 py-2 font-semibold text-green-700">{formatCurrency(net)}</td>
                   </tr>
                 );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Back Button */}
-        <div className="mt-6">
-          <Link href="/manager/dashboard">
-            <button className="inline-block px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
-              ← Back to Dashboard
-            </button>
-          </Link>
-        </div>
+              })
+            )}
+          </tbody>
+        </table>
       </div>
+
+      {/* Back Button */}
+     
+      </div>
+      </div>
+    
+     
+  
+  
     </main>
+      <footer className="w-full bg-indigo-900 text-white py-12 px-4 font-inter rounded-t-3xl mt-12">
+      <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
+        <p className="text-gray-400 text-sm mb-2">© 2026 Fleet Management System. All rights reserved.</p>
+        <p className="font-bold text-green-700">
+          Our mission is to optimize fleet operations and improve driver efficiency.
+        </p>
+      </div>
+    </footer>
+    </div>
+     
   );
 }
 
-function SummaryCard({ title, amount }: { title: string; amount: number }) {
-  return (
-    <div className="bg-blue-100 rounded-lg p-6 shadow text-center">
-      <p className="text-sm font-medium text-gray-700 mb-2">{title}</p>
-      <h3 className="text-2xl font-bold text-green-600">{formatCurrency(amount)}</h3>
-    </div>
-  );
-}
+
+

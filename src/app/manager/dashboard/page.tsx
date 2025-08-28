@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { UserIcon, XIcon, BarcodeIcon } from 'lucide-react';
 import Barcode from 'react-barcode';
+import { CalendarDays } from "lucide-react";
+import { Zap } from "lucide-react";
+
 
 interface Stat { label: string; value: number; description: string; }
 interface Driver { name: string; status: string; }
@@ -71,7 +74,7 @@ setAssignments(assignData?.data || []);
   }, []);
 
   const Footer = () => (
-    <footer className="w-full bg-indigo-900 text-white py-12 px-4 font-inter rounded-t-3xl mt-12">
+    <footer className="w-full bg-indigo-100 text-white py-12 px-4 font-inter rounded-t-3xl mt-12">
       <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
         <p className="text-gray-400 text-sm mb-2">© 2026 Fleet Management System. All rights reserved.</p>
         <p className="font-bold text-green-700">
@@ -85,7 +88,7 @@ setAssignments(assignData?.data || []);
     <div className="flex flex-col min-h-screen bg-gray-100">
       <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="w-64 bg-indigo-900 shadow-md border-r border-gray-200">
+        <aside className="w-64 bg-indigo-100  border-gray-200">
           <div className="p-6 text-xl font-bold text-green-700">Manager</div>
           <nav className="mt-6 space-y-1">
             <Link href="/manager/dashboard" className="flex items-center px-6 py-3 text-sm font-medium hover:bg-green-100 text-gray-400">Dashboard</Link>
@@ -97,12 +100,16 @@ setAssignments(assignData?.data || []);
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-8 overflow-y-auto bg-white">
+        <main className="min-h-screen bg-gradient-to-b from-blue-100 to-white p-6">
           {/* Stats Cards */}
+           <div className="bg-white rounded-xl shadow-lg p-10 space-y-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+            Manage drivers, assignment and perfomance metrics.
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {stats.map((stat, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-2xl shadow border">
-                <p className="text-gray-500 text-sm">{stat.label}</p>
+              <div key={idx} className="bg-blue-200 p-6 rounded-2xl shadow border">
+                <p className="text-white-500 text-sm">{stat.label}</p>
                 <p className="text-2xl font-bold text-green-700">{stat.value}</p>
                 <p className="text-xs text-gray-500">{stat.description}</p>
               </div>
@@ -115,10 +122,17 @@ setAssignments(assignData?.data || []);
               <div className="bg-white p-6 rounded-2xl shadow border">
                 <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                   <h2 className="text-lg font-semibold">Driver Assignment</h2>
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Today</button>
+                 <button className="flex items-center gap-2 bg-blue-300 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+  <CalendarDays className="w-5 h-5" />
+  Today
+</button>
+
                   <div className="flex space-x-4">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Auto Assign</button>
-                    <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700" onClick={() => setShowManualAssign(true)}>Manual Assign</button>
+                    <button className="flex items-center gap-2 bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">
+        <Zap className="w-5 h-5" />
+        Auto-Assignment
+      </button>
+                    <button className="bg-green-300 text-white px-4 py-2 rounded-lg hover:bg-green-700" onClick={() => setShowManualAssign(true)}>Manual Assign</button>
                   </div>
                 </div>
 
@@ -141,26 +155,40 @@ setAssignments(assignData?.data || []);
 
                   {/* Pending Orders */}
                   <div>
-                    <h4 className="text-md font-semibold text-gray-700 mb-2">Pending Orders</h4>
-                    <ul className="space-y-3">
-                      {orders.map((order) => (
-                        <li key={order.id} className="p-3 bg-gray-50 rounded-md flex justify-between items-start">
-                          <div className="flex items-center gap-3">
-                            <button onClick={() => handleBarcodeClick(order.id)}>
-                              <BarcodeIcon className="w-5 h-5 text-green-500 hover:text-green-700" />
-                            </button>
-                            <div>
-                              <p className="font-bold">{order.id}</p>
-                              <p className="text-sm text-gray-600">{order.route}</p>
-                              <p className="text-xs text-gray-500">ETA: {order.eta}</p>
-                            </div>
-                          </div>
-                          <span className={`text-xs font-semibold px-2 py-1 rounded-full ${order.priority === 'Priority' ? 'bg-blue-200 text-blue-800' : 'bg-gray-200 text-gray-800'}`}>{order.priority}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+      <h4 className="text-md font-semibold text-gray-700 mb-2">Pending Orders</h4>
+      <ul className="space-y-3">
+        {orders.length === 0 ? (
+          <p className="text-gray-500 text-sm">No pending orders</p>
+        ) : (
+          orders.map((order) => (
+            <li
+              key={order.id}
+              className="p-3 bg-gray-50 rounded-md flex justify-between items-start"
+            >
+              <div className="flex items-center gap-3">
+                <button onClick={() => console.log(order.id)}>
+                  <BarcodeIcon className="w-5 h-5 text-green-500 hover:text-green-700" />
+                </button>
+                <div>
+                  <p className="font-bold">{order.id}</p>
+                  <p className="text-sm text-gray-600">{order.route}</p>
+                  <p className="text-xs text-gray-500">ETA: {order.eta}</p>
                 </div>
+              </div>
+              <span
+                className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                  order.priority === "Priority"
+                    ? "bg-blue-200 text-blue-800"
+                    : "bg-gray-200 text-gray-800"
+                }`}
+              >
+                {order.priority}
+              </span>
+            </li>
+          ))
+        )}
+      </ul>
+    </div>
 
                 {/* Sub-cards for assignments */}
                 {assignments.map((item) => (
@@ -182,6 +210,7 @@ setAssignments(assignData?.data || []);
                   </div>
                 ))}
               </div>
+            </div>
             </div>
 
             {/* Driver Performance */}
@@ -270,7 +299,9 @@ setAssignments(assignData?.data || []);
                 </button>
               </div>
             </div>
+          
           )}
+          </div>
         </main>
       </div>
       <Footer />
