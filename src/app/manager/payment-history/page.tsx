@@ -71,7 +71,7 @@ const totalToFarmers = totalTransferred - totalTax - totalDelivery;
 
   return (
        <div className="min-h-screen bg-gray-100 font-sans flex flex-col">
-  <header className="bg-indigo-900 text-white py-6 shadow-lg w-full">
+  <header className="bg-[#1C2340] text-white py-6 shadow-lg w-full">
         <h1 className="text-3xl font-bold text-center">Agribridge Payment History</h1>
       </header>
     <main className="min-h-screen bg-gradient-to-b from-blue-100 to-white p-6">
@@ -152,7 +152,7 @@ const totalToFarmers = totalTransferred - totalTax - totalDelivery;
   
   
     </main>
-      <footer className="w-full bg-indigo-900 text-white py-12 px-4 font-inter rounded-t-3xl mt-12">
+      <footer className="w-full bg-[#1C2340] text-white py-12 px-4 font-inter rounded-t-3xl mt-12">
       <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
         <p className="text-gray-400 text-sm mb-2">© 2026 Fleet Management System. All rights reserved.</p>
         <p className="font-bold text-green-700">

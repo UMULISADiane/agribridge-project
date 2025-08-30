@@ -7,6 +7,7 @@ import { UserIcon, XIcon, BarcodeIcon } from 'lucide-react';
 import Barcode from 'react-barcode';
 import { CalendarDays } from "lucide-react";
 import { Zap } from "lucide-react";
+import { Pointer } from "lucide-react";
 
 
 interface Stat { label: string; value: number; description: string; }
@@ -122,17 +123,24 @@ setAssignments(assignData?.data || []);
               <div className="bg-white p-6 rounded-2xl shadow border">
                 <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                   <h2 className="text-lg font-semibold">Driver Assignment</h2>
-                 <button className="flex items-center gap-2 bg-blue-300 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+                 <button className="flex items-center gap-2 px-4 py-2 rounded-lg text-white 
+             bg-gradient-to-r from-green-400 to-blue-500 
+             hover:from-green-500 hover:to-blue-600">
   <CalendarDays className="w-5 h-5" />
   Today
 </button>
 
                   <div className="flex space-x-4">
-                    <button className="flex items-center gap-2 bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">
-        <Zap className="w-5 h-5" />
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg text-white 
+             bg-gradient-to-r from-green-400 to-blue-500 
+             hover:from-green-500 hover:to-blue-600">
+        < Zap  className="w-5 h-5" />
         Auto-Assignment
       </button>
-                    <button className="bg-green-300 text-white px-4 py-2 rounded-lg hover:bg-green-700" onClick={() => setShowManualAssign(true)}>Manual Assign</button>
+                    <button className=" flex items-center gap-2 px-4 py-2 rounded-lg text-white 
+             bg-gradient-to-r from-green-400 to-blue-500 
+             hover:from-green-500 hover:to-blue-600" onClick={() => setShowManualAssign(true)}>
+                      <Pointer className="w-5 h-5" />Manual Assign</button>
                   </div>
                 </div>
 

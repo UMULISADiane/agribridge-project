@@ -32,7 +32,7 @@ export default function FarmerDashboard() {
 
   // Header Component
   const Header = () => (
-    <header className="bg-blue-900 text-white px-6 py-4 flex justify-between items-center">
+    <header className=" bg-[#1C2340] text-white px-6 py-4 flex justify-between items-center">
       <div className="text-2xl font-bold">🌾 Agribridge</div>
       <div className="flex items-center space-x-6">
         <nav className="space-x-6">
@@ -174,7 +174,7 @@ export default function FarmerDashboard() {
 
   // Footer Component
   const Footer = () => (
-    <footer className="w-full bg-indigo-900 text-white py-12 px-4 font-inter rounded-t-3xl mt-12">
+    <footer className="w-full  bg-[#1C2340] text-white py-12 px-4 font-inter rounded-t-3xl mt-12">
       <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
         <p className="text-gray-400 text-sm mb-2">© 2024 Agribridge. Empowering African Farmers.</p>
         <div className="flex space-x-6 text-green-400 font-semibold mb-2">

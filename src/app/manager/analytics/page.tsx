@@ -93,7 +93,7 @@ export default function AnalyticsPage() {
   // === RENDER ===
   return (
     <div className="min-h-screen bg-gray-100 font-sans flex flex-col">
-      <header className="bg-indigo-900 text-white py-6 text-center shadow-lg">
+      <header className="bg-[#1C2340] text-white py-6 text-center shadow-lg">
         <h1 className="text-3xl font-bold">Agribridge Analytics</h1>
       </header>
 
@@ -417,6 +417,14 @@ export default function AnalyticsPage() {
           </div>
         </div>
       </div>
+       <footer className="w-full bg-[#1C2340] text-white py-12 px-4 font-inter rounded-t-3xl mt-12">
+      <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
+        <p className="text-gray-400 text-sm mb-2">© 2026 Fleet Management System. All rights reserved.</p>
+        <p className="font-bold text-green-700">
+          Our mission is to optimize fleet operations and improve driver efficiency.
+        </p>
+      </div>
+    </footer>
     </div>
   );
 }
